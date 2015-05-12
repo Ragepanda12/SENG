@@ -217,6 +217,16 @@ public class MainPage extends JFrame {
 		choice_1.add("10");
 		choice_1.add("15");
 		choice_1.add("20");
+		
+		btnSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				/*JPanel panel = new JPanel();
+				Results results = new Results();
+				panel.add(results);*/
+				
+			}
+		});
 	}
 
 }
