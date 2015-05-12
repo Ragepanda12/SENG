@@ -47,7 +47,11 @@ public class Results extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton button = new JButton("Back");
-		button.setBounds(180, 227, 55, 23);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		button.setBounds(180, 227, 76, 23);
 		contentPane.add(button);
 		
 		table = new JTable();
@@ -55,7 +59,8 @@ public class Results extends JFrame {
 		contentPane.add(table);
 		
 		JLabel lblResults = new JLabel("Results");
-		lblResults.setBounds(189, 11, 46, 14);
+		lblResults.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResults.setBounds(180, 11, 76, 14);
 		contentPane.add(lblResults);
 	}
 }
