@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
@@ -127,11 +128,21 @@ public class ConsoleSystem {
 	}
 	
 	private static GregorianCalendar checkDateTime(int day, int month, int year, int hour, int minute){
-		if ((day < 1)||(day > 31)||
-				(month < 1)||(month > 12)||
-				(year < 2000) || (year > 2500)||
-				(hour < 0 ) || (hour > 23)|| 
-				(minute < 0) || (minute > 59)){
+		int[] thirtyDays = {4,6,9,11}; 
+		if ((day < 1) 		||
+			(day > 31)		||
+			(month < 1)		||
+			(month > 12)	||
+			(year < 2000) 	|| 
+			(year > 2500)	||
+			(hour < 0 ) 	|| 
+			(hour > 23)		|| 
+			(minute < 0) 	|| 
+			(minute > 59)	||
+			(month == 2 && day>29 && isLeapYear(year))  ||
+			(month == 2 && day>28 && !isLeapYear(year)) ||
+			(Arrays.asList(thirtyDays).contains(month) && day>30)	//months with 30 days
+			){
 			return null;
 		}
 		
@@ -170,4 +181,30 @@ public class ConsoleSystem {
 		}
 		return true;
 	}
+
+	
+	//somethingsomething leap year function
+	private static boolean isLeapYear(int year) {
+		int y = year;
+		if (y < 100) {
+			if (y > 40) {
+				y = y + 1900;
+			} else {
+				y = y + 2000;
+			}
+		}
+		if (y % 4 == 0) {
+			if (y % 100 != 0) {
+				return true;
+			} else if (y % 400 == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		return false;
+	}
+	
 }
