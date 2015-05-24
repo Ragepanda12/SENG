@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -65,6 +67,8 @@ public class MainPage extends JFrame {
 	public MainPage() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
+		
+		//Main Panel
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -157,7 +161,7 @@ public class MainPage extends JFrame {
 		
 		txtHour = new JTextField();
 		txtHour.setText("Hour");
-		panel.add(txtHour);
+		//panel.add(txtHour);
 		txtHour.setColumns(10);
 		txtHour.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -165,12 +169,34 @@ public class MainPage extends JFrame {
 			}
 		});
 		
+		Choice hours = new Choice();
+		panel.add(hours);
+		hours.add("01");
+		hours.add("02");
+		hours.add("03");
+		hours.add("04");
+		hours.add("05");
+		hours.add("06");
+		hours.add("07");
+		hours.add("08");
+		hours.add("09");
+		hours.add("10");
+		hours.add("11");
+		hours.add("12");
+		
 		JLabel label = new JLabel(":");
 		panel.add(label);
 		
+		Choice minutes = new Choice();
+		panel.add(minutes);
+		minutes.add("00");
+		minutes.add("15");
+		minutes.add("30");
+		minutes.add("45");
+		
 		txtMinutes = new JTextField();
 		txtMinutes.setText("Minutes");
-		panel.add(txtMinutes);
+		//panel.add(txtMinutes);
 		txtMinutes.setColumns(10);
 		
 		txtMinutes.addMouseListener(new MouseAdapter() {
@@ -179,10 +205,11 @@ public class MainPage extends JFrame {
 			}
 		});
 		
+		
 		Choice choice_2 = new Choice();
 		panel.add(choice_2);
-		choice_2.add("am");
-		choice_2.add("pm");
+		choice_2.add("AM");
+		choice_2.add("PM");
 		
 		JLabel lblOrigin = new JLabel("Origin:");
 		contentPane.add(lblOrigin, "2, 10");
@@ -199,34 +226,92 @@ public class MainPage extends JFrame {
 		JLabel lblSortResults = new JLabel("Sort results:");
 		contentPane.add(lblSortResults, "2, 16");
 		
-		Choice choice = new Choice();
-		contentPane.add(choice, "4, 16");
-		choice.add("Minimal Cost");
-		choice.add("Minimal Travel Time");
-		choice.add("Maximal frequent flier value");
+		Choice SortResultsBy = new Choice();
+		contentPane.add(SortResultsBy, "4, 16");
+		SortResultsBy.add("Minimal Cost");
+		SortResultsBy.add("Minimal Travel Time");
+		SortResultsBy.add("Maximal frequent flier value");
 		
 		JLabel lblResultsPerPage = new JLabel("Results per page:");
 		contentPane.add(lblResultsPerPage, "2, 18");
 		
-		Choice choice_1 = new Choice();
-		contentPane.add(choice_1, "4, 18");
+		final Choice NumResults = new Choice();
+		contentPane.add(NumResults, "4, 18");
 		
 		JButton btnSearch = new JButton("Search");
 		contentPane.add(btnSearch, "4, 22");
-		choice_1.add("5");
-		choice_1.add("10");
-		choice_1.add("15");
-		choice_1.add("20");
+		NumResults.add("5");
+		NumResults.add("10");
+		NumResults.add("15");
+		NumResults.add("20");
 		
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/*JPanel panel = new JPanel();
-				Results results = new Results();
-				panel.add(results);*/
+				contentPane.setVisible(false);
+
+				//Results Page
+				final JPanel ResultsPage = new JPanel();
+				
+				ResultsPage.setLayout(new GridLayout(20,1));
+				ResultsPage.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+				
+				JLabel lblWebookuTravelAgency = new JLabel("WeBookU Travel Agency");
+				lblWebookuTravelAgency.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+				ResultsPage.add(lblWebookuTravelAgency);
+				
+				int[] NumResultsSelect = {5,10,15,20};
+				
+				String[] sampleString = {"AirNZ","3RD JUNE 3:55AM","3RD JUNE 2:00PM"," $799 1 ADULT 2 CHILD"};
+				for (int i=0; i<NumResultsSelect[NumResults.getSelectedIndex()]; i++) { //currently accepts ResultsPerPage, but not Sort By
+					JPanel singleResult = new JPanel();
+					singleResult.setLayout(new GridLayout(1,5));
+					JLabel Airliner = new JLabel("Airliner");
+					JLabel Departs = new JLabel("Departs");
+					JLabel Arrives = new JLabel("Arrives");
+					JLabel Details = new JLabel("Details");
+					JLabel Choice = new JLabel("Choice");
+					JButton Select = new JButton("Select");
+					if (i>0) {
+						Airliner.setText(sampleString[0]);
+						Departs.setText(sampleString[1]);
+						Arrives.setText(sampleString[2]);
+						Details.setText(sampleString[3]);	
+					}
+					singleResult.add(Airliner);
+					singleResult.add(Departs);
+					singleResult.add(Arrives);
+					singleResult.add(Details);
+					if (i>0) {
+						singleResult.add(Select);
+					} else { singleResult.add(Choice); };
+					ResultsPage.add(singleResult);
+					
+				};		
+				
+				JButton returnToMainPage = new JButton("Back");
+				ResultsPage.add(returnToMainPage);
+				returnToMainPage.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ResultsPage.setVisible(false);
+						setContentPane(contentPane);
+						contentPane.setVisible(true);
+						
+					}
+				});
+			
+				ResultsPage.setVisible(true);
+				setContentPane(ResultsPage);
 				
 			}
 		});
-	}
 
+		
+	}
+	
+	public JPanel Result(String Airliner, String Departs, String Arrives, String Details) {
+		JPanel r = new JPanel();
+		return r;
+	}
 }
