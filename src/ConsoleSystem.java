@@ -7,16 +7,19 @@ import java.util.Scanner;
 
 
 public class ConsoleSystem {
-	private static String input;
-	private static ArrayList<String> lines = new ArrayList<String>();
-	private static ArrayList<City> cities = new ArrayList<City>();
-	private static String debugLastLine; //remove later
+	private String input;
+	private ArrayList<String> lines = new ArrayList<String>();
+	private ArrayList<City> cities = new ArrayList<City>();
+	private ArrayList<City> originCities = new ArrayList<City>();
+	private ArrayList<City> destinCities = new ArrayList<City>();
+	private String debugLastLine; //remove later
 	
-	public static void main(String[] args) {
-
+	public void parseInput(String[] args) {
 	    Scanner sc = null;
+	    
 	    try{
 	    	sc = new Scanner(new FileReader(args[0]));
+	    	
 		    input = sc.useDelimiter("\\Z").next(); //dodgily read entire file into a string
 	    }catch (FileNotFoundException e) {
 	    }finally{
@@ -47,7 +50,8 @@ public class ConsoleSystem {
 		    	if (temp.length != 7){
 		    		validData = false;
 		    		//break FlightDataProcessing; //temporarily commented out for debugging
-		    		System.out.println("incorrectly formatted flight data: "+debugLastLine); //remove later
+		    		System.out.println("incorrectly formatted flight data: "+ debugLastLine); //remove later
+		    		continue; //remove later //update: don't remove continues, we need them -- Angus
 		    	} else {
 		    		boolean validOrigin = checkName(temp[2]);
 		    		boolean validDestination = checkName(temp[3]);
@@ -57,14 +61,15 @@ public class ConsoleSystem {
 	    			if ((!validOrigin)||(!validDestination)||(travelTime == -1) || (!validAirline) || (cost == -1 )){
 	    				validData = false;
 	    				//break FlightDataProcessing; //temporarily commented out for debugging
-	    				System.out.println("incorrectly formatted flight data: "+debugLastLine); //remove later
+	    				System.out.println("incorrectly formatted flight data: "+ debugLastLine); //remove later
+	    				continue; //remove later //update: don't remove continues, we need them -- Angus
 	    			}
 	    			String[] date = temp[0].split("/");
 	    			String[] time = temp[1].split(":");
 	    			if ((date.length != 3) || (time.length != 2)){
 	    				validData = false;
-	    				System.out.println("incorrectly formatted flight data: "+debugLastLine); //remove later
-	    				continue; //remove later
+	    				System.out.println("incorrectly formatted flight data: "+ debugLastLine); //remove later
+	    				continue; //remove later //update: don't remove continues, we need them -- Angus
 	    				//break FlightDataProcessing;	//temporarily commented out for debugging
 	    			}
 	    			int day = checkNumber(date[0]);
@@ -75,8 +80,8 @@ public class ConsoleSystem {
 	    			
 	    			if ((day == -1)||(month == -1)||(year == -1)||(hour == -1)||(minute == -1)){
 	    				validData = false;
-	    				System.out.println("incorrectly formatted flight data: "+debugLastLine); //remove later
-	    				continue; //remove later
+	    				System.out.println("incorrectly formatted flight data: "+ debugLastLine); //remove later
+	    				continue; //remove later //update: don't remove continues, we need them -- Angus
 	    				//break FlightDataProcessing;	//temporarily commented out for debugging	    				
 	    			}
 	    			
@@ -85,6 +90,10 @@ public class ConsoleSystem {
 		    			// ========== [START] FIND/MAKE CITY OBJECTS ==========
 		    		    originExists = false;
 		    		    destinationExists = false;
+		    		    
+		    		    boolean originInOriginCities = false;
+		    		    boolean destinationInDestinCities = false;
+		    		    
 		    			for (City c: cities){					
 		    				if (c.getName().equals(temp[2])){
 		    					originExists = true;
@@ -94,12 +103,27 @@ public class ConsoleSystem {
 		    					destination = c;
 		    				}
 		    			}
+		    			
+		    			//These lines are to ensure that the GUI has the correct choices
+		    			origin = new City(temp[2]);
+		    			destination = new City(temp[3]);
+		    			
+	    				for(City c : originCities) {
+	    					if(c.getName().equals(origin.getName())) originInOriginCities = true;
+	    				}
+	    				
+	    				for(City c : destinCities) {
+	    					if(c.getName().equals(destination.getName())) destinationInDestinCities = true;
+	    				}
+	    				
+	    				if(originInOriginCities == false) originCities.add(origin);
+	    				if(destinationInDestinCities == false) destinCities.add(destination);
+	    				
+	    				//These lines are to add to the overall cities array list
 		    			if (!originExists){
-		    				origin = new City(temp[2]);
 		    				cities.add(origin);
 		    			}
 		    			if (!destinationExists){
-		    				destination = new City(temp[3]);
 		    				cities.add(destination);
 		    			}
 		    			// ========== [END] FIND/MAKE CITY OBJECTS ==========
@@ -204,7 +228,14 @@ public class ConsoleSystem {
 		} else {
 			return false;
 		}
-		return false;
+	}
+	
+	public ArrayList<City> getOriginCities() {
+		return originCities;
+	}
+	
+	public ArrayList<City> getDestinCities() {
+		return destinCities;
 	}
 	
 }

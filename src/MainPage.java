@@ -28,9 +28,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
@@ -45,15 +50,28 @@ public class MainPage extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtHour;
 	private JTextField txtMinutes;
+	private ArrayList<String> originCities;
+	private ArrayList<String> destCities;
+	static ConsoleSystem cs = new ConsoleSystem();
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Scanner sc = null;
+	    
+	   // try{
+	    	//sc = new Scanner(new FileReader(args[0]));
+	    	cs.parseInput(args);
+	    //}catch (FileNotFoundException e) {
+	    //}finally{
+	        //if (sc != null) sc.close();
+	   // }
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainPage frame = new MainPage();
+					MainPage frame = new MainPage(cs);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +83,10 @@ public class MainPage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainPage() {
+	public MainPage(ConsoleSystem cs) {
+		originCities = new ArrayList<String>();
+		destCities = new ArrayList<String>();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		
@@ -217,16 +238,18 @@ public class MainPage extends JFrame {
 		JLabel lblOrigin = new JLabel("Origin:");
 		contentPane.add(lblOrigin, "2, 10");
 		
-		Choice destChoice = new Choice();
-		contentPane.add(destChoice, "4, 10");
-		destChoice.add("Sample Origin");
+		Choice origChoice = new Choice();
+		contentPane.add(origChoice, "4, 10");
+		origChoice.add("Sample Origin");
 		
 		JLabel lblDestination = new JLabel("Destination:");
 		contentPane.add(lblDestination, "2, 12");
 		
-		Choice originChoice = new Choice();
-		contentPane.add(originChoice, "4, 12");
-		originChoice.add("Sample Origin");
+		Choice destChoice = new Choice();
+		contentPane.add(destChoice, "4, 12");
+		destChoice.add("Sample Destination");
+		
+		initChoices(cs, origChoice, destChoice);
 		
 		JLabel lblSortResults = new JLabel("Sort results:");
 		contentPane.add(lblSortResults, "2, 16");
@@ -311,12 +334,24 @@ public class MainPage extends JFrame {
 				
 			}
 		});
-
-		
 	}
 	
 	public JPanel Result(String Airliner, String Departs, String Arrives, String Details) {
 		JPanel r = new JPanel();
 		return r;
+	}
+	
+	public void initChoices(ConsoleSystem s, Choice oChoice, Choice dChoice) {
+		ArrayList<City> originCities = s.getOriginCities();
+		ArrayList<City> destinCities = s.getDestinCities();
+
+		for(City c : originCities) {
+			System.out.println(c.getName());
+			oChoice.add(c.getName());
+		}
+		
+		for(City c : destinCities) {
+			dChoice.add(c.getName());
+		}
 	}
 }
