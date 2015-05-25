@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -130,9 +131,10 @@ public class MainPage extends JFrame {
 		final JButton btnChooseDate = new JButton("Choose Date");
 		btnChooseDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFrame newWindow = new JFrame();
+				final JFrame newWindow = new JFrame();
 				final JDateChooser dateChooser = new JDateChooser();
 				dateChooser.setBounds(100, 20, 200, 30); // Modify depending on your preference
+				newWindow.setLocation(contentPane.getWidth(), contentPane.getHeight());
 				newWindow.getContentPane().add(dateChooser);
 				newWindow.pack();
 				newWindow.setVisible(true);
@@ -145,6 +147,7 @@ public class MainPage extends JFrame {
 				            	Date date =  dateChooser.getDate();
 				            	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				            	btnChooseDate.setText(dateFormat.format(date));
+				            	newWindow.dispose();
 				            }
 				        }
 				    });
@@ -214,14 +217,16 @@ public class MainPage extends JFrame {
 		JLabel lblOrigin = new JLabel("Origin:");
 		contentPane.add(lblOrigin, "2, 10");
 		
-		JButton btnChooseOrigin = new JButton("Choose Origin");
-		contentPane.add(btnChooseOrigin, "4, 10");
+		Choice destChoice = new Choice();
+		contentPane.add(destChoice, "4, 10");
+		destChoice.add("Sample Origin");
 		
 		JLabel lblDestination = new JLabel("Destination:");
 		contentPane.add(lblDestination, "2, 12");
 		
-		JButton btnChooseDestination = new JButton("Choose Destination");
-		contentPane.add(btnChooseDestination, "4, 12");
+		Choice originChoice = new Choice();
+		contentPane.add(originChoice, "4, 12");
+		originChoice.add("Sample Origin");
 		
 		JLabel lblSortResults = new JLabel("Sort results:");
 		contentPane.add(lblSortResults, "2, 16");
