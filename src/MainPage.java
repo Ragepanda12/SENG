@@ -60,13 +60,13 @@ public class MainPage extends JFrame {
 	public static void main(String[] args) {
 		Scanner sc = null;
 	    
-	   // try{
-	    	//sc = new Scanner(new FileReader(args[0]));
+	    try{
+	    	sc = new Scanner(new FileReader(args[0]));
 	    	cs.parseInput(args);
-	    //}catch (FileNotFoundException e) {
-	    //}finally{
-	        //if (sc != null) sc.close();
-	   // }
+	    }catch (FileNotFoundException e) {
+	    }finally{
+	        if (sc != null) sc.close();
+	    }
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -83,7 +83,7 @@ public class MainPage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainPage(ConsoleSystem cs) {
+	public MainPage(final ConsoleSystem cs) {
 		originCities = new ArrayList<String>();
 		destCities = new ArrayList<String>();
 		
@@ -99,7 +99,7 @@ public class MainPage extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("121dlu"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(93dlu;default):grow"),
+				ColumnSpec.decode("max(100dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(5dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
@@ -154,6 +154,10 @@ public class MainPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				final JFrame newWindow = new JFrame();
 				final JDateChooser dateChooser = new JDateChooser();
+				long milsto2k = 946645200000L; //num of milliseconds between 1/1/2000 and somethingsomething/1970
+				long milsto2500 = 16756635600000L;
+				dateChooser.setMinSelectableDate(new Date(milsto2k)); //Selects current time as the minimum date i.e disable past dates
+				dateChooser.setMaxSelectableDate(new Date(milsto2500)); //similarly for 31/12/2500
 				dateChooser.setBounds(100, 20, 200, 30); // Modify depending on your preference
 				newWindow.setLocation(contentPane.getWidth(), contentPane.getHeight());
 				newWindow.getContentPane().add(dateChooser);
@@ -185,7 +189,7 @@ public class MainPage extends JFrame {
 		
 		txtHour = new JTextField();
 		txtHour.setText("Hour");
-		//panel.add(txtHour);
+		panel.add(txtHour);
 		txtHour.setColumns(10);
 		txtHour.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -194,7 +198,7 @@ public class MainPage extends JFrame {
 		});
 		
 		Choice hours = new Choice();
-		panel.add(hours);
+		//panel.add(hours);
 		hours.add("01");
 		hours.add("02");
 		hours.add("03");
@@ -211,8 +215,9 @@ public class MainPage extends JFrame {
 		JLabel label = new JLabel(":");
 		panel.add(label);
 		
+		
 		Choice minutes = new Choice();
-		panel.add(minutes);
+		//panel.add(minutes);
 		minutes.add("00");
 		minutes.add("15");
 		minutes.add("30");
@@ -220,7 +225,7 @@ public class MainPage extends JFrame {
 		
 		txtMinutes = new JTextField();
 		txtMinutes.setText("Minutes");
-		//panel.add(txtMinutes);
+		panel.add(txtMinutes);
 		txtMinutes.setColumns(10);
 		
 		txtMinutes.addMouseListener(new MouseAdapter() {
@@ -290,6 +295,7 @@ public class MainPage extends JFrame {
 				ResultsPage.add(lblWebookuTravelAgency);
 				
 				int[] NumResultsSelect = {5,10,15,20};
+				String[] SortBySelect = {"MinCost", "MinTravelTime", "MaxFreqFlierValue"};
 				
 				String[] sampleString = {"AirNZ","3RD JUNE 3:55AM","3RD JUNE 2:00PM"," $799 1 ADULT 2 CHILD"};
 				for (int i=0; i<NumResultsSelect[NumResults.getSelectedIndex()]; i++) { //currently accepts ResultsPerPage, but not Sort By
@@ -334,11 +340,6 @@ public class MainPage extends JFrame {
 				
 			}
 		});
-	}
-	
-	public JPanel Result(String Airliner, String Departs, String Arrives, String Details) {
-		JPanel r = new JPanel();
-		return r;
 	}
 	
 	public void initChoices(ConsoleSystem s, Choice oChoice, Choice dChoice) {
